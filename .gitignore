@@ -73,11 +73,12 @@ output/
 *~
 .DS_Store
 Thumbs.db
-.vscode/
+.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/c_cpp_properties.json
 !.vscode/extensions.json
+!.vscode/launch.json
 .idea/
 *.swp
 *.swo
@@ -88,3 +89,13 @@ Thumbs.db
 *.log
 *.tmp
 *.temp
+~$*
+
+# 本机配置、依赖缓存与实测原始证据
+CMakeUserPresets.json
+tools/local.paths.ps1
+.tools/
+node_modules/
+__pycache__/
+Docs/evidence/*
+!Docs/evidence/README.md

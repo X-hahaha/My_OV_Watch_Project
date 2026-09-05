@@ -1,0 +1,33 @@
+{
+  "platform": "windows-x86_64",
+  "checkedOn": "2026-09-05",
+  "packages": [
+    {
+      "name": "CMake",
+      "version": "4.4.3",
+      "url": "https://github.com/Kitware/CMake/releases/download/v4.4.3/cmake-4.4.3-windows-x86_64.zip",
+      "archive": "cmake-4.4.3-windows-x86_64.zip",
+      "sha256": "4d52ebab7193a698651639ed80d8d04fd903358843572cf44c7fd234cb7c26ab",
+      "extractTo": ".",
+      "executable": "cmake-4.4.3-windows-x86_64/bin/cmake.exe"
+    },
+    {
+      "name": "Ninja",
+      "version": "1.13.2",
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-win.zip",
+      "archive": "ninja-1.13.2-win.zip",
+      "sha256": "07fc8261b42b20e71d1720b39068c2e14ffcee6396b76fb7a795fb460b78dc65",
+      "extractTo": "ninja-1.13.2",
+      "executable": "ninja-1.13.2/ninja.exe"
+    },
+    {
+      "name": "xPack OpenOCD",
+      "version": "0.12.0-7",
+      "url": "https://github.com/xpack-dev-tools/openocd-xpack/releases/download/v0.12.0-7/xpack-openocd-0.12.0-7-win32-x64.zip",
+      "archive": "xpack-openocd-0.12.0-7-win32-x64.zip",
+      "sha256": "6bfd3c97135aafef8affc9af1acf34fd0e2b9ca26044506f6abd7f95b7630052",
+      "extractTo": ".",
+      "executable": "xpack-openocd-0.12.0-7/bin/openocd.exe"
+    }
+  ]
+}
