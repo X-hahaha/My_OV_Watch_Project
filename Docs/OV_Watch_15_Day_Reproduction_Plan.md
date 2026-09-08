@@ -1,6 +1,6 @@
 # OV-Watch 软件复现与优化 15 天执行计划
 
-> 文档版本：v1.1（2026-09-05 Day 1 校对副本，勘误见 plan_errata.md）
+> 文档版本：v1.3（2026-09-06 增加无硬件期间的 PC 端推进路线；HAL 时基固定为 TIM10，勘误见 plan_errata.md）
 > 制定日期：2026-09-04
 > 计划周期：15 天，每天约 6 小时，总计约 90 小时
 > 目标平台：STM32F411CEU6 + VSCode + CMake + Ninja + Arm GNU Toolchain
@@ -77,7 +77,8 @@
 | RTC 时钟 | LSE |
 | 应用 Flash | `ORIGIN = 0x0800C000`，`LENGTH = 0x74000` |
 | SRAM | `ORIGIN = 0x20000000`，`LENGTH = 0x20000` |
-| HAL 时基 | TIM1，避免与 FreeRTOS SysTick 冲突；按旧源码及 Day 2 / Day 5 校正 |
+| HAL 时基 | TIM10，避免与 FreeRTOS SysTick 冲突，并释放高级定时器 TIM1；旧源码的 TIM1 配置只作参考 |
+| STM32CubeF4 | V1.28.2；CubeMX 生成时复制本工程实际需要的 CMSIS/HAL 文件 |
 | FreeRTOS | V11.3.0，官方仓库固定 tag |
 | FreeRTOS Port | `portable/GCC/ARM_CM4F` |
 | FreeRTOS Heap | 初期 `heap_4.c`，最终根据 MAP 和峰值调整 |
@@ -220,6 +221,22 @@ my_project/
 
 规则：当日核心验收没有通过时，不把未经确认的模块继续叠加到下一层。次日最多先使用 2 小时解决遗留问题；超过 2 小时则重新评估依赖或切换到可独立任务。
 
+### 8.1 暂无硬件期间的执行策略（2026-09-06 起）
+
+“Day”从连续日历日调整为工作包。近期拿不到实板时，继续完成能够在 PC 上客观验证的配置、构建、链接、静态检查、纯算法测试和接口移植；需要观察电平、波形、外设响应、Bootloader 跳转或长期运行的项目统一记为 `BLOCKED_HW`，不伪造 PASS，也不阻塞无硬件依赖的工作。
+
+| 原工作包 | 暂无硬件时先完成 | 硬件恢复后的补测 |
+|---|---|---|
+| Day 1 | 工具链、仓库、原理图与参考源码静态基线 | 旧 BIN 黑盒行为、实板电平和版本证据 |
+| Day 2 | CubeMX `.ioc`、生成代码静态检查、Debug 构建 | HAL Tick、UART、PWM 和启动电平 |
+| Day 3 | Debug/Release 构建、应用链接脚本、ELF/HEX/BIN/MAP、`readelf`/`objdump` 检查、VSCode 配置 | Bootloader 跳转、GDB 连接、断点与寄存器验证 |
+| Day 4 | 编写可选择启用的裸机诊断入口；为电池换算、PWM 映射、帧解析等纯逻辑增加主机测试 | GPIO、RTC、ADC、UART、SPI、DMA、EXTI 和波形全部实测 |
+| Day 5-6 | FreeRTOS 源码、配置、原生 API 应用骨架通过交叉编译和静态检查 | 调度、Hook、ISR 唤醒、优先级和 GPIO 时序 |
+| Day 7-13 | 按参考工程移植驱动与业务接口；用 mock、命令序列和资源构建验证不依赖硬件的部分 | LCD、触摸、传感器、蓝牙、EEPROM、充电、休眠和唤醒逐项上板 |
+| Day 14-15 | 架构审查、编译告警、MAP/栈预算、文档与可复现构建 | 压力、功耗、循环唤醒和完整回归 |
+
+无硬件期间允许提交 PC 端检查点，但名称必须反映实际证据。依赖运行结果的里程碑 Tag 暂缓创建；硬件恢复后按 Day 1 黑盒基线、Day 2/3 启动链、Day 4 裸机外设、后续集成的顺序补测。设备驱动即使已经编译成功，也保持 `UNVERIFIED_HW`，直到对应硬件测试通过。
+
 ## 9. 15 天详细计划
 
 ## Day 1：建立黑盒基线、工具链和 Git 仓库
@@ -290,7 +307,7 @@ Tag：`v0.1.0-baseline`
 4. 配置 SWD。
 5. 配置 SPI1、USART1、ADC1、TIM3 PWM、RTC。
 6. 配置 SPI1 TX DMA、USART1 RX/TX DMA。
-7. 配置 TIM1 为 HAL Timebase。
+7. 配置 TIM10 为 HAL Timebase。
 8. 按原理图补齐 GPIO、EXTI 和输出初始电平。
 9. 保留 CubeMX 用户代码区，生成最小 HAL 工程。
 10. 先用临时构建方式确认生成代码本身无缺失。
@@ -299,7 +316,7 @@ Tag：`v0.1.0-baseline`
 
 - CubeMX 工程未启用两个目标中间件。
 - `SystemCoreClock` 为 100 MHz。
-- HAL Tick 由 TIM1 递增。
+- HAL Tick 由 TIM10 递增；共享中断向量名为 `TIM1_UP_TIM10_IRQn`，但 TIM1 不被启用。
 - SWD 不被 GPIO 配置覆盖。
 - 所有 DMA Stream、Channel 和 NVIC 优先级均有记录。
 - 串口能输出启动信息，背光 PWM 占空比可调。
@@ -341,7 +358,7 @@ Tag：`v0.2.0-hal-skeleton`
 
 ### 验收标准
 
-- `cmake --preset debug` 和 `cmake --build --preset debug` 成功。
+- `cmake --preset Debug` 和 `cmake --build --preset Debug` 成功。
 - `.isr_vector` 位于 `0x0800C000`。
 - 初始 MSP 位于 SRAM 范围。
 - Bootloader 连续 10 次跳转成功。
@@ -420,7 +437,7 @@ Tag：`v0.4.0-peripheral-baseline`
 4. 加入 `portable/MemMang/heap_4.c`。
 5. 手写并逐项理解 `FreeRTOSConfig.h`。
 6. 映射 SVC、PendSV 和 SysTick Handler。
-7. 确保 HAL Tick 仍来自 TIM1。
+7. 确保 HAL Tick 仍来自 TIM10。
 8. 创建两个测试任务，验证优先级、阻塞和抢占。
 9. 增加 Idle Hook、Tick Hook、Stack Overflow Hook、Malloc Failed Hook。
 10. 通过 GPIO 波形测量任务切换和周期。
@@ -1048,7 +1065,7 @@ v1.2.0-reproduction-complete
 期望结果：
 实际结果：
 证据：串口日志 / 截图 / 波形 / 视频 / GDB
-状态：PASS / FAIL / BLOCKED
+状态：PASS / FAIL / BLOCKED_HW
 备注：
 ```
 

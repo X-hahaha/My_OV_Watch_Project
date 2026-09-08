@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug (ST-Link)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "cwd": "${workspaceFolder}/project/my_project",
+            "executable": "${workspaceFolder}/project/my_project/build/Debug/my_project.elf",
+            "device": "STM32F411CEUx",
+            "interface": "swd",
+            "svdFile": "${workspaceFolder}/project/my_project/STM32F411.svd",
+            "serverpath": "${workspaceFolder}/.tools/xpack-openocd-0.12.0-7/bin/openocd.exe",
+            "searchDir": [
+                "${workspaceFolder}/.tools/xpack-openocd-0.12.0-7/openocd/scripts"
+            ],
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32f4x.cfg"
+            ],
+            "preLaunchTask": "build-debug",
+            "runToEntryPoint": "main"
+        }
+    ]
+}

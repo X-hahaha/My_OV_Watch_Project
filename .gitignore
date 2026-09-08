@@ -57,6 +57,7 @@ bin/
 # STM32CubeMX 生成缓存
 # ==============================================
 *.ioc.backup
+.mxproject
 .mxproject/
 
 # ==============================================
@@ -90,6 +91,7 @@ Thumbs.db
 *.tmp
 *.temp
 ~$*
+tmp/
 
 # 本机配置、依赖缓存与实测原始证据
 CMakeUserPresets.json

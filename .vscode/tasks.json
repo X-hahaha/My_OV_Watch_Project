@@ -1,0 +1,53 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "cmake-configure-debug",
+            "type": "shell",
+            "command": ". \"${workspaceFolder}/tools/enter-env.ps1\"; cmake --preset Debug",
+            "options": {
+                "cwd": "${workspaceFolder}/project/my_project",
+                "shell": {
+                    "executable": "powershell.exe",
+                    "args": [
+                        "-NoProfile",
+                        "-ExecutionPolicy",
+                        "Bypass",
+                        "-Command"
+                    ]
+                }
+            },
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "执行 CMake Configure 生成 Ninja"
+        },
+        {
+            "label": "build-debug",
+            "type": "shell",
+            "command": ". \"${workspaceFolder}/tools/enter-env.ps1\"; cmake --build --preset Debug",
+            "options": {
+                "cwd": "${workspaceFolder}/project/my_project",
+                "shell": {
+                    "executable": "powershell.exe",
+                    "args": [
+                        "-NoProfile",
+                        "-ExecutionPolicy",
+                        "Bypass",
+                        "-Command"
+                    ]
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "dependsOn": "cmake-configure-debug",
+            "detail": "执行 CMake Build 编译工程"
+        }
+    ]
+}

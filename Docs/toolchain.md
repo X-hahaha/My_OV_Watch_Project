@@ -13,12 +13,13 @@
 | Ninja | 1.13.2 | `.tools/ninja-1.13.2`，PASS |
 | xPack OpenOCD | 包版本 0.12.0-7 | `.tools/xpack-openocd-0.12.0-7/bin`，PASS |
 | Git | 2.54.0.windows.1 | 原有 `D:/Git/cmd`，PASS |
-| STM32CubeMX | 安装元数据 `APP_VER=6.15.0`、revision `6.15.0-RC4` | `D:/STM32cubeMX/STM32CubeMX.exe` 已找到；GUI 启动待 Day 2 验证 |
+| STM32CubeMX | 安装元数据 `APP_VER=6.15.0`、revision `6.15.0-RC4` | `D:/STM32cubeMX/STM32CubeMX.exe`；用户已在 Day 2 完成 GUI 建项和代码生成，PASS |
+| STM32CubeF4 | 本机已有 V1.27.0、V1.28.2；本项目固定 V1.28.2 | V1.28.2 生成结果已通过 Debug 交叉编译，PASS |
 | VSCode 插件 | C/C++ 1.34.3、CMake Tools 1.23.52、Cortex-Debug 1.12.1 | 用户扩展目录均已找到，PASS |
 
 OpenOCD `--version` 原文为 `xPack Open On-Chip Debugger 0.12.0+dev-02228-ge5888bda3-dirty (2025-10-04-22:44)`。这是已下载包自身的版本字符串，不将它改写为 upstream 的纯 0.12.0 release。
 
-STM32CubeMX 的 Windows 文件版本显示为 `>6.15.0-RC4`，安装器元数据同时给出 `APP_VER=6.15.0` 与 revision `6.15.0-RC4`，因此两项都保留。这里只证明安装文件可读取；创建和生成工程时再记录 GUI About 信息与实际生成结果。
+STM32CubeMX 的 Windows 文件版本显示为 `>6.15.0-RC4`，安装器元数据同时给出 `APP_VER=6.15.0` 与 revision `6.15.0-RC4`，因此两项都保留。Day 2 已使用该安装创建 `project/my_project/my_project.ioc`，并由 STM32CubeF4 V1.28.2 生成可编译的 HAL 工程。
 
 本项目选择 OpenOCD 调试，因此核验脚本中 `ST-LINK_gdbserver: MISSING` 不影响总体 PASS；两者只需一项可用。USB 驱动、下载器识别和板上 GDB 连接未验证。
 
