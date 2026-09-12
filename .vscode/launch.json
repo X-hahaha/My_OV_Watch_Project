@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "Debug (ST-Link)",
             "type": "cortex-debug",
@@ -19,6 +20,21 @@
                 "interface/stlink.cfg",
                 "target/stm32f4x.cfg"
             ],
+            "openOCDLaunchCommands": [
+            "adapter speed 1800",
+            "stm32f4x.cpu configure -event gdb-attach { mmw 0x40023830 0x00000002 0x00000000; mww 0x40020418 0x00000002; mmw 0x40020400 0x00000004 0x00000008; halt 1000 }"
+        ],
+            "postLaunchCommands": [
+                "monitor mmw 0x40023830 0x00000002 0x00000000",
+                "monitor mww 0x40020418 0x00000002",
+                "monitor mmw 0x40020400 0x00000004 0x00000008"
+            ],
+            "postResetCommands": [
+            "monitor mmw 0x40023830 0x00000002 0x00000000",
+            "monitor mww 0x40020418 0x00000002",
+            "monitor mmw 0x40020400 0x00000004 0x00000008"
+            ],
+            "showDevDebugOutput": "raw",
             "preLaunchTask": "build-debug",
             "runToEntryPoint": "main"
         }

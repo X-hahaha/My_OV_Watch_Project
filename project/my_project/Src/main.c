@@ -28,7 +28,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "DAG_TIM3.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,7 +49,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint8_t rx_buf[64] = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -74,10 +74,10 @@ int main(void)
 
 
   SCB->VTOR = FLASH_BASE | 0x0C000;
-
   __DSB();
   __ISB();
-
+  uint8_t tx_test[] = {0x55, 0x00, 0xFF, 0x01, 0x80, 0xAA};
+  
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -86,6 +86,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+
 
   /* USER CODE END Init */
 
@@ -106,6 +107,11 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  __enable_irq();
+  HAL_GPIO_WritePin(LED_EN_GPIO_Port, LED_EN_Pin, GPIO_PIN_RESET);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+  PWM_SetDuty(&htim3, TIM_CHANNEL_3, 90.0f);
+  HAL_UART_Receive_DMA(&huart1, rx_buf, 64);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -113,6 +119,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+  
+  HAL_GPIO_TogglePin(LED_EN_GPIO_Port, LED_EN_Pin);
+  HAL_UART_Transmit(&huart1, tx_test, sizeof(tx_test), 100);
+  HAL_Delay(500);
 
     /* USER CODE BEGIN 3 */
   }

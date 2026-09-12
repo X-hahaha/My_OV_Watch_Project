@@ -3,5 +3,6 @@
     "cmake.cmakePath": "${workspaceFolder}/.tools/cmake-4.4.3-windows-x86_64/bin/cmake.exe",
     "cmake.environment": {
         "PATH": "${workspaceFolder}/.tools/ninja-1.13.2;${env:PATH}"
-    }
+    },
+    "cortex-debug.variableUseNaturalFormat": false
 }

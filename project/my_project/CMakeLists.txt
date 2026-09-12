@@ -44,6 +44,8 @@ add_executable(${CMAKE_PROJECT_NAME})
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
+# Add DAG
+add_subdirectory(DAG)
 
 # define USER_VECT_TAB_ADDRESS
 target_compile_definitions(STM32_Drivers PRIVATE USER_VECT_TAB_ADDRESS VECT_TAB_OFFSET=0x0000C000U)
