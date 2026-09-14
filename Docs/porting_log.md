@@ -37,4 +37,15 @@
 - 完成 VS Code Task、Cortex-Debug、OpenOCD、SVD 和 CMake Tools 静态配置；Task 可独立加载项目环境，CMake Tools 使用仓库内 CMake/Ninja。已有旧构建缓存以 `--fresh` 重建。
 - Day 2 检查器最终全部 PASS。Day 3 PC Gate 为 PASS；Bootloader 连续跳转和 GDB 调试仍为 `BLOCKED_HW`，暂不创建 `v0.3.0-gnu-boot` Tag。
 
+## 2026-09-14 / Day 5 收尾审核
+
+- 开发者取得硬件，报告旧 Keil 固件启动、LCD、传感器、通信和存储正常，新工程 GPIO/PWM/RTC/UART 基本验证正常。仅 ST-Link 供电；按开发者要求进入 Day 5，ADC/SPI DMA/充电等 Day 4 未完成项目继续延期。
+- 开发者手动移植官方 FreeRTOS-Kernel V11.3.0，使用 `APP/demo` 和 `ThirdParty`；通过 submodule 固定 `9b777ae5c5b8e9e456065a00294d1e5f5f9facf5`。实现双任务、Hook、heap_4 和 CM4F Port。
+- 实板日志显示 200 ms/5 ms 双任务正常；双任务剩余栈 229 words，最小剩余 Heap 22296 B；Malloc、Stack Overflow、IRQ Assert 三项负向实验均记录了预期 failure。
+- 审核发现 gpio.c 保留 IRQ 优先级 4、main.c 保留 FromISR 故障回调；收尾恢复为 5 并撤去回调，移除无用 Task.h 引用及 demo 头文件的 FreeRTOS 反向依赖。收尾前父仓库提交为 `cdd0268`。
+- 重新配置并全量构建 Debug/Release，各 49 步通过；RAM 29352 B，Flash 22412/19684 B。向量表、MSP、Reset/SVC/PendSV/SysTick、VTOR 和硬浮点 ABI 均静态通过。
+- 原始 Release 日志为增量构建，已补全量日志。单通道波形约 5.044 ms，仅作辅助；原始日志未保存 ELF/BIN 身份，不虚构采集提交。新增每日审核记录、证据指纹和第三方版本登记。
+- Day 5 检查点为本地 `v0.5.0-freertos-kernel`；未推送远程。收尾版硬件复查作为 Day 6 第一步，启动交接的 HAL Tick 超时风险继续登记。
+- 后续保持开发者实现、助手审核与指导的协作方式，不代写 Day 6 业务实现。
+
 后续每次移植记录：变更原因、涉及模块、验证命令、实际结果、遗留项和对应 commit。

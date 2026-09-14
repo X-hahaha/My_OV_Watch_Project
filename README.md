@@ -1,12 +1,13 @@
 # OV-Watch 软件复现
 
-基于 STM32F411CEU6，从纯 HAL 工程开始，手动移植 FreeRTOS 与 LVGL，复现参考手表的软件功能。Day 2 CubeMX HAL 骨架和 Day 3 GNU 构建的 PC 端检查均已通过；应用位于 `0x0800C000`，Debug/Release 构建及 ELF 静态审计完成。Day 1 黑盒基线和 Day 3 启动调试实测因无硬件保留为 `BLOCKED_HW`。
+基于 STM32F411CEU6，从纯 HAL 工程开始，手动移植 FreeRTOS 与 LVGL，复现参考手表的软件功能。当前完成 Day 5 FreeRTOS Kernel 最小移植与审核，下一步为 Day 6 原生 IPC 训练。应用位于 `0x0800C000`，保留现有 Bootloader。
 
 ## 当前检查点
 
 1. [Day 2 执行记录](Docs/daily/2026-09-06-day02.md) 已关闭 PA2 `CHARG` EXTI 问题，检查器结果为 PASS。
 2. [Day 3 执行记录](Docs/daily/2026-09-08-day03.md) 保存构建、链接地址、VTOR 和 VS Code 配置结论。
-3. Day 4 按单独的每日任务推进；所有实板结果继续写入 [测试矩阵](Docs/test_matrix.md) 的 `BLOCKED_HW` 队列，取得设备后再补测。
+3. 硬件已到位，开发者报告 Bootloader、新应用调试及 GPIO/PWM/RTC/UART 基本验证正常。实验仅由 ST-Link 供电；ADC、SPI DMA、充电与低功耗等未完成项目继续保留，Day 4 G2 不因跳日自动通过。
+4. [Day 5 执行记录](Docs/daily/2026-09-14-day05.md) 保存双任务、时基、三个故障实验及收尾审核结论。检查点为 `v0.5.0-freertos-kernel`；审核后的小幅清理已重新全量构建，未由助手重新烧录实板。
 
 ## 技术约定
 
@@ -33,6 +34,11 @@
 - [Day 2 CubeMX 配置清单](Docs/day02_cubemx_checklist.md)
 - [Day 2 执行记录](Docs/daily/2026-09-06-day02.md)
 - [Day 3 执行记录](Docs/daily/2026-09-08-day03.md)
+- [Day 5 移植指导手册](Docs/Day05_FreeRTOS_Manual_Port_Guide.md)
+- [Day 5 执行记录](Docs/daily/2026-09-14-day05.md)
+- [Day 5 证据指纹](Docs/day05_evidence_manifest.md)
+- [第三方源码版本](Docs/third_party.md)
+- [测试矩阵](Docs/test_matrix.md)
 - [参考固件标识](Docs/reference_firmware.md)
 - [旧算法库检查](Docs/legacy_libraries.md)
 - [移植日志](Docs/porting_log.md)
@@ -45,4 +51,4 @@
 
 源代码与新文档使用 UTF-8；`.gitattributes` 管理换行，不批量改写旧工程的混合编码文件。`.gitignore` 排除构建产物、本机路径、原始日志和视频；`Docs/evidence/README.md` 说明证据管理方法。
 
-Day 1 的硬件基线 Tag 仍等待实板证据。CubeMX 生成工程位于 `project/my_project`，可通过 Debug/Release CMake Preset 构建；Day 3 已完成应用区布局、ELF/HEX/BIN/MAP 和 VS Code 静态调试配置，Bootloader 与 GDB 实测等待硬件。
+CubeMX 生成工程位于 `project/my_project`，业务代码使用实际目录 `APP`。开发者负责实现、烧录和实验，助手负责每日审核、记录与下一日指导；每日检查点按已取得的证据打标签。Day 1 详细黑盒清单和 Day 3 连续启动/调试尾项仍按测试矩阵补齐。

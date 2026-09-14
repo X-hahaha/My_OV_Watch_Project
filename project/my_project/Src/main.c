@@ -30,8 +30,6 @@
 /* USER CODE BEGIN Includes */
 #include "DAG_TIM3.h"
 #include "day05_rtos_demo.h"
-#include "FreeRTOS.h"
-#include "Task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,7 +51,6 @@
 
 /* USER CODE BEGIN PV */
 
-extern TaskHandle_t low_task_handle;
 
 /* USER CODE END PV */
 
@@ -184,20 +181,6 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-  /* Prevent unused argument(s) compilation warning */
-  UNUSED(GPIO_Pin);
-  if(GPIO_Pin != KEY1_Pin) return;
-
-  BaseType_t pxHigherPriorityTaskWoken = pdFALSE;
-  vTaskNotifyGiveFromISR(low_task_handle, &pxHigherPriorityTaskWoken);
-  if(pxHigherPriorityTaskWoken)
-  {
-    portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
-  }
-
-}
 /* USER CODE END 4 */
 
 /**

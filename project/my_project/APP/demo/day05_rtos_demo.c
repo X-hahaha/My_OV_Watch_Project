@@ -17,7 +17,7 @@
 #define Low_Task_Priority            (tskIDLE_PRIORITY + 1U)
 #define High_Task_Priority           (tskIDLE_PRIORITY + 3U)
 
-TaskHandle_t low_task_handle = NULL;
+static TaskHandle_t low_task_handle = NULL;
 static TaskHandle_t high_task_handle = NULL;
 Day05RtosStats g_day05_rtos_stats = {0};
 
