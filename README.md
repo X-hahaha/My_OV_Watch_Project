@@ -8,6 +8,7 @@
 2. [Day 3 执行记录](Docs/daily/2026-09-08-day03.md) 保存构建、链接地址、VTOR 和 VS Code 配置结论。
 3. 硬件已到位，开发者报告 Bootloader、新应用调试及 GPIO/PWM/RTC/UART 基本验证正常。实验仅由 ST-Link 供电；ADC、SPI DMA、充电与低功耗等未完成项目继续保留，Day 4 G2 不因跳日自动通过。
 4. [Day 5 执行记录](Docs/daily/2026-09-14-day05.md) 保存双任务、时基、三个故障实验及收尾审核结论。检查点为 `v0.5.0-freertos-kernel`；审核后的小幅清理已重新全量构建，未由助手重新烧录实板。
+5. 下一步按 [Day 6 指导手册](Docs/Day06_FreeRTOS_Native_IPC_Guide.md) 完成五类 IPC 与软件 Timer，先复查收尾固件，再做按键通知和 UART DMA+IDLE。
 
 ## 技术约定
 
@@ -36,6 +37,7 @@
 - [Day 3 执行记录](Docs/daily/2026-09-08-day03.md)
 - [Day 5 移植指导手册](Docs/Day05_FreeRTOS_Manual_Port_Guide.md)
 - [Day 5 执行记录](Docs/daily/2026-09-14-day05.md)
+- [Day 6 原生 IPC 指导手册](Docs/Day06_FreeRTOS_Native_IPC_Guide.md)
 - [Day 5 证据指纹](Docs/day05_evidence_manifest.md)
 - [第三方源码版本](Docs/third_party.md)
 - [测试矩阵](Docs/test_matrix.md)
