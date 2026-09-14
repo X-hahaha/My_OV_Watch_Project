@@ -163,7 +163,7 @@ my_project/
 │     ├─ eeprom/
 │     ├─ power/
 │     └─ ble/
-├─ Middlewares/
+├─ ThirdParty/
 │  ├─ FreeRTOS-Kernel/
 │  └─ lvgl/
 ├─ Config/
@@ -1021,8 +1021,8 @@ v1.2.0-reproduction-complete
 
 优先使用 Git submodule 并固定官方 Tag：
 
-- `Middlewares/FreeRTOS-Kernel` → V11.3.0。
-- `Middlewares/lvgl` → v8.4.0。
+- `ThirdParty/FreeRTOS-Kernel` → V11.3.0。
+- `ThirdParty/lvgl` → v8.4.0。
 
 如果不用 submodule，则将官方源码作为 vendor 快照提交，并在 `Docs/third_party.md` 记录：
 

@@ -1,5 +1,6 @@
-set(FREERTOS_KERNEL_DIR 
-    ${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/FreeRTOS-Kernel
+# Keep manually managed dependencies outside CubeMX's reserved Middlewares folder.
+set(FREERTOS_KERNEL_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/FreeRTOS-Kernel
 )
 
 set(FREERTOS_REQUIRED_FILES
@@ -17,7 +18,10 @@ set(FREERTOS_REQUIRED_FILES
 
 foreach(FILE_PATH IN LISTS FREERTOS_REQUIRED_FILES)
     if(NOT EXISTS "${FREERTOS_KERNEL_DIR}/${FILE_PATH}")
-        message(FATAL_ERROR "FreeRTOS kernel file not found: ${FILE_PATH}")
+        message(FATAL_ERROR
+            "FreeRTOS kernel file not found: ${FREERTOS_KERNEL_DIR}/${FILE_PATH}. "
+            "From the repository root, run: git submodule update --init --checkout -- project/my_project/ThirdParty/FreeRTOS-Kernel"
+        )
     endif()
 endforeach()
 

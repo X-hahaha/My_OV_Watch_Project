@@ -3,13 +3,21 @@
 #include "day05_rtos_demo.h"
 #include "main.h"
 
-#define Low_Task_Stack_Word          256U
+#define Malloc_Failed_Fault           0U
+#define Stack_Overflow_Fault          0U
+
+#if (Stack_Overflow_Fault == 1)
+#define Low_Task_Stack_Word          64U
+#else
+#define Low_Task_Stack_Word          256U   
+#endif 
+
 #define High_Task_Stack_Word         256U
 
 #define Low_Task_Priority            (tskIDLE_PRIORITY + 1U)
 #define High_Task_Priority           (tskIDLE_PRIORITY + 3U)
 
-static TaskHandle_t low_task_handle = NULL;
+TaskHandle_t low_task_handle = NULL;
 static TaskHandle_t high_task_handle = NULL;
 Day05RtosStats g_day05_rtos_stats = {0};
 
@@ -43,7 +51,12 @@ void Day05Rtos_Start(void)
     }
     g_day05_rtos_stats.free_heap_bytes = (uint32_t)xPortGetFreeHeapSize();
     g_day05_rtos_stats.minimum_ever_free_heap_bytes = (uint32_t)xPortGetMinimumEverFreeHeapSize();
-
+/* -------------launch Malloc Failed Hook----------------*/
+#if (Malloc_Failed_Fault == 1)
+    void *test = pvPortMalloc(configTOTAL_HEAP_SIZE + 1U);
+    (void)test;
+#endif
+/*-------------------------------------------------------*/
     vTaskStartScheduler();
     Day05Fail(DAY05_FAILURE_SCHEDULER_RETURNED); 
 }
@@ -58,6 +71,11 @@ void LowPriorityTask(void *pvParameters)
 
     while(1)
     {
+        #if (Stack_Overflow_Fault == 1)
+            volatile uint8_t stack_test[256];
+            stack_test[0] = 1U;
+            taskYIELD();
+        #endif
         g_day05_rtos_stats.low_period_count++;
         HAL_GPIO_WritePin(LED_EN_GPIO_Port, LED_EN_Pin, GPIO_PIN_SET);
         start_ms = HAL_GetTick();

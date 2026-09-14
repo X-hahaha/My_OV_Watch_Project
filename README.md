@@ -23,7 +23,7 @@
 | CubeMX | 生成 CMSIS、HAL、启动代码、时钟和外设初始化 |
 | 功能边界 | SPO2 作为模拟显示；NFC 作为无硬件的页面功能，实测表现仍需记录 |
 
-工具链与 STM32CubeF4 已按表中版本核验。FreeRTOS 和 LVGL 尚未集成；Day 5 / Day 8 固定源码版本时记录实际 commit 和许可证。
+工具链与 STM32CubeF4 已按表中版本核验。FreeRTOS 内核已集成并通过 submodule 固定版本；LVGL 尚未集成，Day 8 固定源码版本时记录实际 commit 和许可证。
 
 ## 文档索引
 
@@ -40,6 +40,8 @@
 本地参考工程为 `../gpt/OV_Watch`。本次工作只读取参考工程；新实现放在本仓库。参考 HEX/BIN 的可观察行为与参考源码分开验证；当前源码尚未证明能重建相同固件。
 
 ## 文件和 Git
+
+手动引入的第三方库统一放在 `project/my_project/ThirdParty`，FreeRTOS 内核通过 submodule 固定在 V11.3.0。首次克隆后从仓库根目录执行 `git submodule update --init --checkout -- project/my_project/ThirdParty/FreeRTOS-Kernel`。CubeMX 的 `Middlewares`、`Utilities` 是保留目录，重新生成时可能被清理，不能用于存放手动维护的库；见 [ST 官方说明](https://dev.st.com/stm32cube-docs/stm32cubemx/6.18.1/en/docs/markup/CubeMX_UserManual/chapters/04_4_stm32cubemx_user_interface.html)。
 
 源代码与新文档使用 UTF-8；`.gitattributes` 管理换行，不批量改写旧工程的混合编码文件。`.gitignore` 排除构建产物、本机路径、原始日志和视频；`Docs/evidence/README.md` 说明证据管理方法。
 

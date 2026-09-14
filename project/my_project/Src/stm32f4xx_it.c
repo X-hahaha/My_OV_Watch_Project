@@ -63,7 +63,7 @@ extern UART_HandleTypeDef huart1;
 extern TIM_HandleTypeDef htim10;
 
 /* USER CODE BEGIN EV */
-extern uint8_t rx_buf[64];
+
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -148,7 +148,7 @@ void UsageFault_Handler(void)
   * @brief This function handles System service call via SWI instruction.
   */
 #ifndef APP_USE_FREERTOS
-  void SVC_Handler(void)
+void SVC_Handler(void)
 {
   /* USER CODE BEGIN SVCall_IRQn 0 */
 
@@ -253,6 +253,20 @@ void EXTI4_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles EXTI line[9:5] interrupts.
+  */
+void EXTI9_5_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI9_5_IRQn 0 */
+
+  /* USER CODE END EXTI9_5_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(KEY1_Pin);
+  /* USER CODE BEGIN EXTI9_5_IRQn 1 */
+
+  /* USER CODE END EXTI9_5_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM1 update interrupt and TIM10 global interrupt.
   */
 void TIM1_UP_TIM10_IRQHandler(void)
@@ -274,7 +288,6 @@ void USART1_IRQHandler(void)
   /* USER CODE BEGIN USART1_IRQn 0 */
   if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE)) {
     __HAL_UART_CLEAR_IDLEFLAG(&huart1);
-    HAL_UART_Receive_DMA(&huart1, rx_buf, 64);  
 }
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);

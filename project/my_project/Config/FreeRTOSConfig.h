@@ -81,6 +81,7 @@
         {                                               \
             g_day05_rtos_stats.assert_file = __FILE__;                   \
             g_day05_rtos_stats.assert_line = __LINE__;                  \
+            g_day05_rtos_stats.failure = DAY05_FAILURE_ASSERT; \
             __disable_irq();                            \
             for (;;) { }                                \
         }                                               \

@@ -67,6 +67,7 @@ void Error_Handler(void);
 #define WAKE_EXTI_IRQn EXTI4_IRQn
 #define KEY1_Pin GPIO_PIN_5
 #define KEY1_GPIO_Port GPIOA
+#define KEY1_EXTI_IRQn EXTI9_5_IRQn
 #define WDOG_EN_N_Pin GPIO_PIN_1
 #define WDOG_EN_N_GPIO_Port GPIOB
 #define WDI_Pin GPIO_PIN_2

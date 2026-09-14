@@ -64,13 +64,15 @@ git commit -m "test(hal): record gpio pwm rtc and uart bring-up"
 
 ## 3. 获取并固定官方 Kernel
 
+手动维护的第三方源码放到 `ThirdParty`。ST 的 [CubeMX 用户手册](https://dev.st.com/stm32cube-docs/stm32cubemx/6.18.1/en/docs/markup/CubeMX_UserManual/chapters/04_4_stm32cubemx_user_interface.html) 明确说明 `Middlewares` 和 `Utilities` 是保留目录名，重新生成时可能被删除或修改；`Keep User Code` 只保护生成文件中的用户代码区，不能保护这些目录。后续手动引入的 LVGL 也放到 `ThirdParty`。
+
 推荐使用 Git submodule：
 
 ```powershell
-git submodule add https://github.com/FreeRTOS/FreeRTOS-Kernel.git project/my_project/Middlewares/FreeRTOS-Kernel
-git -C project/my_project/Middlewares/FreeRTOS-Kernel checkout V11.3.0
-git -C project/my_project/Middlewares/FreeRTOS-Kernel describe --tags --exact-match
-git -C project/my_project/Middlewares/FreeRTOS-Kernel rev-parse HEAD
+git submodule add https://github.com/FreeRTOS/FreeRTOS-Kernel.git project/my_project/ThirdParty/FreeRTOS-Kernel
+git -C project/my_project/ThirdParty/FreeRTOS-Kernel checkout V11.3.0
+git -C project/my_project/ThirdParty/FreeRTOS-Kernel describe --tags --exact-match
+git -C project/my_project/ThirdParty/FreeRTOS-Kernel rev-parse HEAD
 git submodule status
 ```
 
@@ -81,6 +83,18 @@ V11.3.0
 ```
 
 仓库最终依靠 gitlink 固定具体提交，不设置跟随 `main`。即使官方已经出现新版本，本阶段也不升级。
+
+已有仓库在首次克隆或源码目录缺失时，从仓库根目录执行：
+
+```powershell
+git submodule update --init --checkout -- project/my_project/ThirdParty/FreeRTOS-Kernel
+```
+
+如果子模块的 `.git` 仍在、仅源码被删除，`update` 可能因 HEAD 已匹配而不重新检出。确认内核内没有要保留的本地修改后，仅恢复子模块工作区：
+
+```powershell
+git -C project/my_project/ThirdParty/FreeRTOS-Kernel restore --source=HEAD --worktree -- .
+```
 
 如果使用 ZIP，则必须保留完整官方源码、`LICENSE.md`，并在 `Docs/third_party.md` 记录版本、来源、下载日期、SHA-256 和本地修改。两种方式只选择一种。
 
@@ -96,7 +110,7 @@ project/my_project/
 │     └─ day05_rtos_demo.h
 ├─ Config/
 │  └─ FreeRTOSConfig.h
-├─ Middlewares/
+├─ ThirdParty/
 │  └─ FreeRTOS-Kernel/       # 官方 V11.3.0 submodule
 └─ cmake/
    └─ freertos_kernel.cmake
@@ -109,22 +123,22 @@ project/my_project/
 本日加入：
 
 ```text
-Middlewares/FreeRTOS-Kernel/tasks.c
-Middlewares/FreeRTOS-Kernel/queue.c
-Middlewares/FreeRTOS-Kernel/list.c
-Middlewares/FreeRTOS-Kernel/timers.c
-Middlewares/FreeRTOS-Kernel/event_groups.c
-Middlewares/FreeRTOS-Kernel/stream_buffer.c
-Middlewares/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/port.c
-Middlewares/FreeRTOS-Kernel/portable/MemMang/heap_4.c
+ThirdParty/FreeRTOS-Kernel/tasks.c
+ThirdParty/FreeRTOS-Kernel/queue.c
+ThirdParty/FreeRTOS-Kernel/list.c
+ThirdParty/FreeRTOS-Kernel/timers.c
+ThirdParty/FreeRTOS-Kernel/event_groups.c
+ThirdParty/FreeRTOS-Kernel/stream_buffer.c
+ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/port.c
+ThirdParty/FreeRTOS-Kernel/portable/MemMang/heap_4.c
 ```
 
 包含目录：
 
 ```text
 Config
-Middlewares/FreeRTOS-Kernel/include
-Middlewares/FreeRTOS-Kernel/portable/GCC/ARM_CM4F
+ThirdParty/FreeRTOS-Kernel/include
+ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F
 ```
 
 `croutine.c`、MPU Port、其他编译器 Port 和 CMSIS wrapper 均不加入。
@@ -135,7 +149,7 @@ Middlewares/FreeRTOS-Kernel/portable/GCC/ARM_CM4F
 
 ```cmake
 set(FREERTOS_KERNEL_DIR
-    "${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/FreeRTOS-Kernel"
+    "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/FreeRTOS-Kernel"
 )
 
 set(FREERTOS_REQUIRED_FILES
