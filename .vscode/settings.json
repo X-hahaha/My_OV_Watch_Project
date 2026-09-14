@@ -4,5 +4,5 @@
     "cmake.environment": {
         "PATH": "${workspaceFolder}/.tools/ninja-1.13.2;${env:PATH}"
     },
-    "cortex-debug.variableUseNaturalFormat": false
+    "cortex-debug.variableUseNaturalFormat": true
 }

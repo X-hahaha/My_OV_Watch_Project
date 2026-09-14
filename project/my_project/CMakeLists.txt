@@ -46,6 +46,11 @@ add_executable(${CMAKE_PROJECT_NAME})
 add_subdirectory(cmake/stm32cubemx)
 # Add DAG
 add_subdirectory(DAG)
+# Add APP
+add_subdirectory(APP)
+
+# Add FreeRTOS kernel
+include(cmake/freertos_kernel.cmake)
 
 # define USER_VECT_TAB_ADDRESS
 target_compile_definitions(STM32_Drivers PRIVATE USER_VECT_TAB_ADDRESS VECT_TAB_OFFSET=0x0000C000U)
