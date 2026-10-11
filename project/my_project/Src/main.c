@@ -28,9 +28,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "DAG_TIM3.h"
-#include "day05_rtos_demo.h"
-#include "app_entry.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -76,7 +73,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
 
-  SCB->VTOR = FLASH_BASE | 0x0C000;
+  SCB->VTOR = FLASH_BASE | 0x0C000;  /*冗余安全设计，将向量表偏移地址设为bootloader后*/
   __DSB();
   __ISB();
   
@@ -111,8 +108,6 @@ int main(void)
 
   __enable_irq();
   HAL_GPIO_WritePin(WDOG_EN_N_GPIO_Port, WDOG_EN_N_Pin, GPIO_PIN_SET);
-  App_Start();
-
 
   /* USER CODE END 2 */
 

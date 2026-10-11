@@ -44,10 +44,6 @@ add_executable(${CMAKE_PROJECT_NAME})
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
-# Add DAG
-add_subdirectory(DAG)
-# Add APP
-add_subdirectory(APP)
 
 # Add FreeRTOS kernel
 include(cmake/freertos_kernel.cmake)

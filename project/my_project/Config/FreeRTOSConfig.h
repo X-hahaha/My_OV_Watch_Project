@@ -4,7 +4,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "stm32f4xx.h"
-#include "day05_rtos_demo.h"
 
 #define configUSE_PREEMPTION                    1
 #define configUSE_TIME_SLICING                  1
@@ -79,9 +78,6 @@
     {                                                   \
         if ((CONDITION) == 0)                           \
         {                                               \
-            g_day05_rtos_stats.assert_file = __FILE__;                   \
-            g_day05_rtos_stats.assert_line = __LINE__;                  \
-            g_day05_rtos_stats.failure = DAY05_FAILURE_ASSERT; \
             __disable_irq();                            \
             for (;;) { }                                \
         }                                               \
