@@ -101,3 +101,4 @@ node_modules/
 __pycache__/
 Docs/evidence/*
 !Docs/evidence/README.md
+project/my_project/.workbuddy/memory/2026-10-10.md

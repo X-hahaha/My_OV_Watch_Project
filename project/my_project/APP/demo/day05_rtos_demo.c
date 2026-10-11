@@ -75,6 +75,7 @@ void LowPriorityTask(void *pvParameters)
             volatile uint8_t stack_test[256];
             stack_test[0] = 1U;
             taskYIELD();
+            // 切换任务时内核会检查栈是否溢出，如果溢出则会调用栈溢出钩子函数
         #endif
         g_day05_rtos_stats.low_period_count++;
         HAL_GPIO_WritePin(LED_EN_GPIO_Port, LED_EN_Pin, GPIO_PIN_SET);

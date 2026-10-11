@@ -30,6 +30,7 @@
 /* USER CODE BEGIN Includes */
 #include "DAG_TIM3.h"
 #include "day05_rtos_demo.h"
+#include "app_entry.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -110,12 +111,9 @@ int main(void)
 
   __enable_irq();
   HAL_GPIO_WritePin(WDOG_EN_N_GPIO_Port, WDOG_EN_N_Pin, GPIO_PIN_SET);
-  Day05Rtos_Start();
-  Error_Handler();
-  // HAL_GPIO_WritePin(LED_EN_GPIO_Port, LED_EN_Pin, GPIO_PIN_RESET);
-  // HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
-  // PWM_SetDuty(&htim3, TIM_CHANNEL_3, 90.0f);
-  // HAL_UART_Receive_DMA(&huart1, rx_buf, 64);
+  App_Start();
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -123,10 +121,6 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-  
-  // HAL_GPIO_TogglePin(LED_EN_GPIO_Port, LED_EN_Pin);
-  // HAL_UART_Transmit(&huart1, tx_test, sizeof(tx_test), 100);
-  // HAL_Delay(500);
 
     /* USER CODE BEGIN 3 */
   }
