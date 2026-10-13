@@ -40,7 +40,6 @@ target_include_directories(freertos_kernel PUBLIC
     ${FREERTOS_KERNEL_DIR}/include
     ${FREERTOS_KERNEL_DIR}/portable/GCC/ARM_CM4F
     ${CMAKE_CURRENT_SOURCE_DIR}/Config
-    ${CMAKE_CURRENT_SOURCE_DIR}/APP/demo
 )
 
 target_link_libraries(freertos_kernel PUBLIC stm32cubemx)

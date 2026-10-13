@@ -28,6 +28,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "app_entry.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -108,7 +109,7 @@ int main(void)
 
   __enable_irq();
   HAL_GPIO_WritePin(WDOG_EN_N_GPIO_Port, WDOG_EN_N_Pin, GPIO_PIN_SET);
-
+  APP_Start();  
   /* USER CODE END 2 */
 
   /* Infinite loop */

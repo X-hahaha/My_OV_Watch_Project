@@ -1,0 +1,9 @@
+set(SYSTEM_SOURCES
+    delay.c
+)
+set(SYSTEM_INCLUDES
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SYSTEM_SOURCES})
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${SYSTEM_INCLUDES})
