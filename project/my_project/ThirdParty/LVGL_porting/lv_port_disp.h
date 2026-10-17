@@ -29,7 +29,8 @@ extern "C" {
 /**********************
  *      TYPEDEFS
  **********************/
-
+extern lv_disp_drv_t * g_disp_drv;
+extern lv_disp_t * g_disp;
 /**********************
  * GLOBAL PROTOTYPES
  **********************/

@@ -34,6 +34,7 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
  *  STATIC VARIABLES
  **********************/
 lv_disp_drv_t * g_disp_drv = NULL;
+lv_disp_t * g_disp = NULL;
 /**********************
  *      MACROS
  **********************/
@@ -81,7 +82,7 @@ void lv_port_disp_init(void)
     //disp_drv.gpu_fill_cb = gpu_fill;
 
     /*Finally register the driver*/
-    lv_disp_drv_register(&disp_drv);
+    g_disp = lv_disp_drv_register(&disp_drv);
 }
 
 /**********************

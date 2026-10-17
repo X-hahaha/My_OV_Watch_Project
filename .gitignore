@@ -93,6 +93,7 @@ Thumbs.db
 *.temp
 ~$*
 tmp/
+project/my_project/ThirdParty/Fonts/
 
 # 本机配置、依赖缓存与实测原始证据
 CMakeUserPresets.json

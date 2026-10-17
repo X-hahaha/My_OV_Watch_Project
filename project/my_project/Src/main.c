@@ -32,6 +32,7 @@
 #include "lcd.h"
 #include "lvgl.h"
 #include "lv_port_disp.h"
+#include "lv_port_indev.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -64,7 +65,19 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+static void btn_toggle_text_cb(lv_event_t * e)
+{
+    // 从事件用户数据中取出Label对象指针
+    lv_obj_t * label = lv_event_get_user_data(e);
+    
+    const char * cur_text = lv_label_get_text(label);
+    // 在两个文本之间切换
+    if(strcmp(cur_text, "Hello LVGL 8.2!") == 0) {
+        lv_label_set_text(label, "Hello Nice to meet you!");
+    } else {
+        lv_label_set_text(label, "Hello LVGL 8.2!");
+    }
+}
 
 /* USER CODE END 0 */
 
@@ -121,6 +134,8 @@ int main(void)
 
   lv_init();//初始化lvgl内核
   lv_port_disp_init();//初始化lvgl显示驱动
+  lv_port_indev_init();//初始化lvgl输入设备驱动
+
 
   lv_obj_t * scr = lv_scr_act();  // 获取当前活动屏幕
   lv_obj_set_style_bg_color(scr, lv_color_hex(0x1A6FB0), 0);
@@ -130,6 +145,17 @@ int main(void)
   lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);  // 屏幕居中对齐
 
 
+  lv_obj_t * btn = lv_btn_create(scr);          // 创建按钮，父对象为当前屏幕
+  lv_obj_set_size(btn, 100, 50);                // 设置按钮尺寸：宽100px，高50px
+  lv_obj_align(btn, LV_ALIGN_CENTER, 0, 60);    // 在Label正下方60px处居中
+    
+  lv_obj_t * btn_label = lv_label_create(btn);  // 给按钮添加文字标签
+  lv_label_set_text(btn_label, "切换文本");
+  lv_obj_center(btn_label);                     // 按钮文字在按钮内居中
+
+  // 绑定点击事件回调
+  lv_obj_add_event_cb(btn, btn_toggle_text_cb, LV_EVENT_CLICKED, label);
+  
 
   APP_Start();  
   /* USER CODE END 2 */

@@ -39,7 +39,9 @@ target_compile_definitions(
 target_include_directories(lvgl SYSTEM PUBLIC ${LVGL_ROOT_DIR} ${LV_CONF_DIR})
 # include porting
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ThirdParty/LVGL_porting/lv_port_disp.c)
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE ThirdParty/LVGL_porting/lv_port_indev.c)
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ThirdParty/LVGL_porting)
+
 # link lvgl library
 target_link_libraries(${CMAKE_PROJECT_NAME} lvgl) 
 
