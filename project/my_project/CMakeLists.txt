@@ -51,6 +51,8 @@ add_subdirectory(SYSTEM)
 
 # Add FreeRTOS kernel
 include(cmake/freertos_kernel.cmake)
+# Add LVGL  
+include(cmake/lvgl.cmake)
 
 # define USER_VECT_TAB_ADDRESS
 target_compile_definitions(STM32_Drivers PRIVATE USER_VECT_TAB_ADDRESS VECT_TAB_OFFSET=0x0000C000U)

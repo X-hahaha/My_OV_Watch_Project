@@ -8,10 +8,10 @@
 #include "DataSave.h"
 #include "semphr.h"
 #include "string.h"
-
+#include "lvgl.h"
 TaskHandle_t uart_task_handle = NULL;
 TaskHandle_t EEPROM_Save_Read_test_task_handle = NULL;
-
+TaskHandle_t lvgl_test_task_handle = NULL;
 
 void UART_test(void *pvParameters)
 {
@@ -82,18 +82,31 @@ void EEPROM_Save_Read_test(void *pvParameters)
         vTaskDelay(pdMS_TO_TICKS(5000));
     }
 }
+void lvgl_test(void *parameters)
+{
+    (void)parameters;
+    while(1)
+    {
+        lv_timer_handler();                  // 处理绘制、定时器、事件等所有LVGL事务
+        vTaskDelay(pdMS_TO_TICKS(5));        // 释放CPU，建议周期3~5ms
+    }
+}
 
 void APP_Start(void)
 {
     /* 开启蓝牙串口模块供电 */
-    HAL_GPIO_WritePin(BLE_EN_GPIO_Port, BLE_EN_Pin, GPIO_PIN_SET);
-    HAL_Delay(1000);
+//    HAL_GPIO_WritePin(BLE_EN_GPIO_Port, BLE_EN_Pin, GPIO_PIN_SET);  当前为st-link供电，如果开启蓝牙st-link带不动蓝牙与屏幕，结果就是当蓝牙发送数据时屏幕会闪烁
+//    HAL_Delay(1000);
 
-    if(xTaskCreate(UART_test, "UART_test_task", 512, NULL, 2, &uart_task_handle) != pdPASS)
-    {
-        FAIL(DIAG_FAIL_TaskCreate);
-    }
-    if((xTaskCreate(EEPROM_Save_Read_test, "EEPROM_Save_Read_test_task", 512, NULL, 2, &EEPROM_Save_Read_test_task_handle)) != pdPASS)
+    // if(xTaskCreate(UART_test, "UART_test_task", 512, NULL, 2, &uart_task_handle) != pdPASS)
+    // {
+    //     FAIL(DIAG_FAIL_TaskCreate);
+    // }
+    // if((xTaskCreate(EEPROM_Save_Read_test, "EEPROM_Save_Read_test_task", 512, NULL, 2, &EEPROM_Save_Read_test_task_handle)) != pdPASS)
+    // {
+    //     FAIL(DIAG_FAIL_TaskCreate);
+    // }
+    if((xTaskCreate(lvgl_test, "lvgl_test_task", 2048, NULL, 3, &lvgl_test_task_handle)) != pdPASS)
     {
         FAIL(DIAG_FAIL_TaskCreate);
     }

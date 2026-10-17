@@ -1,7 +1,7 @@
 #include "Diag.h"
 #include "FreeRTOS.h"
 #include "task.h"
-
+#include "lvgl.h"
 volatile stats_t g_diag_stats;
 
 void FAIL(DiagFail_t fail)
@@ -19,6 +19,7 @@ void vApplicationIdleHook(void)
 void vApplicationTickHook(void)
 {
     g_diag_stats.tick_hook_count++;
+    lv_tick_inc(1);
 }
 void vApplicationMallocFailedHook(void)
 {
