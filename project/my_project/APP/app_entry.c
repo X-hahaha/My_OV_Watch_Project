@@ -9,9 +9,16 @@
 #include "semphr.h"
 #include "string.h"
 #include "lvgl.h"
+#include "PageManager.h"
+#include "KeyTask.h"
+#include "key.h"
+
+Page_t *page_dec_list[] = {&Page_Home, &Page_Menu, &Page_A};
 TaskHandle_t uart_task_handle = NULL;
 TaskHandle_t EEPROM_Save_Read_test_task_handle = NULL;
-TaskHandle_t lvgl_test_task_handle = NULL;
+TaskHandle_t keyscan_task_handle = NULL;
+TaskHandle_t lvgl_scr_task_handle = NULL;
+
 
 void UART_test(void *pvParameters)
 {
@@ -82,15 +89,36 @@ void EEPROM_Save_Read_test(void *pvParameters)
         vTaskDelay(pdMS_TO_TICKS(5000));
     }
 }
-void lvgl_test(void *parameters)
+void lvgl_scr_task(void* parameters)
 {
     (void)parameters;
+    KeyEvent_t key_press;
+    uint8_t i = 0;
     while(1)
     {
-        lv_timer_handler();                  // 处理绘制、定时器、事件等所有LVGL事务
-        vTaskDelay(pdMS_TO_TICKS(5));        // 释放CPU，建议周期3~5ms
+        // 非阻塞接收：没有按键事件时也必须继续处理刷新和动画。
+        if(xQueueReceive(key_queue_handle, &key_press, 0) == pdPASS)
+        {
+            if(key_press == KEY1_Short_Press &&
+               (i + 1U) < sizeof(page_dec_list) / sizeof(page_dec_list[0]))
+            {
+                i++;
+                Page_Load(page_dec_list[i]);
+            }
+            else if(key_press == KEY1_Long_Press && i > 0)
+            {
+                i--;
+                Page_Back();
+            }
+        }
+
+        // 页面切换和 LVGL 刷新统一在本任务执行，避免并发访问。
+        lv_timer_handler();
+        vTaskDelay(pdMS_TO_TICKS(5));
     }
 }
+
+
 
 void APP_Start(void)
 {
@@ -106,11 +134,31 @@ void APP_Start(void)
     // {
     //     FAIL(DIAG_FAIL_TaskCreate);
     // }
-    if((xTaskCreate(lvgl_test, "lvgl_test_task", 2048, NULL, 3, &lvgl_test_task_handle)) != pdPASS)
+    Pages_Init();
+    key_queue_handle = xQueueCreate(10, sizeof(KeyEvent_t));
+    if(key_queue_handle == NULL)
+    {
+        FAIL(DIAG_FAIL_QueueCreate);
+    }
+    key_event_group_handle = xEventGroupCreate();
+    if(key_event_group_handle == NULL)
+    {
+        FAIL(DIAG_FAIL_EventGroupCreate);
+    }
+    if((xTaskCreate(keyscan_task, "keyscan_task", 512, &Key1_instance, 3, &keyscan_task_handle)) != pdPASS)
     {
         FAIL(DIAG_FAIL_TaskCreate);
     }
-    /* 开启任务调度器 */    
+    if((xTaskCreate(keyscan_task, "keyscan_task", 512, &Key2_instance, 3, &keyscan_task_handle)) != pdPASS)
+    {
+        FAIL(DIAG_FAIL_TaskCreate);
+    }
+    if((xTaskCreate(lvgl_scr_task, "lvgl_scr_task", 2048, NULL, 3, &lvgl_scr_task_handle)) != pdPASS)
+    {
+        FAIL(DIAG_FAIL_TaskCreate);
+    }
+    /* 开启任务调度器 */   
+    UserReady = 1;
     vTaskStartScheduler();
     FAIL(DIAG_FAIL_SchedulerReturn);    
 }

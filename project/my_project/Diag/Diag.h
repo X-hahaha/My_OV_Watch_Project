@@ -13,6 +13,8 @@ typedef enum
     DIAG_FAIL_Boot,
     DIAG_FAIL_TaskCreate,
     DIAG_FAIL_SemaphoreCreate,
+    DIAG_FAIL_QueueCreate,
+    DIAG_FAIL_EventGroupCreate,
     DIAG_FAIL_SchedulerReturn,
     DIAG_FAIL_MallocFailed,
     DIAG_FAIL_StackOverflow,

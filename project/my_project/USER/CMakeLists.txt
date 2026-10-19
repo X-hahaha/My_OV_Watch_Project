@@ -1,0 +1,11 @@
+set(USER_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/Func/PageManager.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/KeyTask.c
+)
+set(USER_INCLUDES
+    ${CMAKE_CURRENT_SOURCE_DIR}/Func
+    ${CMAKE_CURRENT_SOURCE_DIR}/Tasks
+)
+
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${USER_SOURCES})
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${USER_INCLUDES})

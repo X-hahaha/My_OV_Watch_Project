@@ -48,6 +48,7 @@ add_subdirectory(Diag)
 add_subdirectory(APP)
 add_subdirectory(BSP)
 add_subdirectory(SYSTEM)
+add_subdirectory(USER)
 
 # Add FreeRTOS kernel
 include(cmake/freertos_kernel.cmake)
